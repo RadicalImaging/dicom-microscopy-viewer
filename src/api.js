@@ -517,7 +517,7 @@ class VLWholeSlideMicroscopyImageViewer {
        * Compute the resolution at each pyramid level, since the zoom
        * factor may not be the same between adjacent pyramid levels.
       */
-      let zoomFactor = pixelSpacing[0] / basePixelSpacing[0];
+      let zoomFactor = baseTotalPixelMatrixColumns / totalPixelMatrixColumns;
       resolutions.push(zoomFactor);
 
       /*
