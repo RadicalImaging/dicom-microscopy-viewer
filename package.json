@@ -1,5 +1,5 @@
 {
-  "name": "dicom-microscopy-viewer-fuberlin",
+  "name": "dicom-microscopy-viewer",
   "version": "0.22.1",
   "description": "Interactive web-based viewer for DICOM Microscopy Images",
   "main": "./src/dicom-microscopy-viewer.js",
