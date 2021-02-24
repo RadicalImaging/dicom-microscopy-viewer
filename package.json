@@ -2,7 +2,7 @@
   "name": "dicom-microscopy-viewer-fuberlin",
   "version": "0.22.1",
   "description": "Interactive web-based viewer for DICOM Microscopy Images",
-  "main": "./build/dicom-microscopy-viewer.js",
+  "main": "./src/dicom-microscopy-viewer.js",
   "scripts": {
     "test": "npm run build && mochify",
     "webdriver": "mochify --wd",
@@ -13,7 +13,7 @@
     "generateStaticSite": "npm run build && cp -R ./build ./examples",
     "generateDocs": "jsdoc -c ./jsdoc_conf.json"
   },
-  "module": "./build/dicom-microscopy-viewer.js",
+  "module": "./src/dicom-microscopy-viewer.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mghcomputationalpathology/dicom-microscopy-viewer.git"
