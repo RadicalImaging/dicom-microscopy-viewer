@@ -1,8 +1,8 @@
 {
-  "name": "dicom-microscopy-viewer",
+  "name": "dicom-microscopy-viewer-fuberlin",
   "version": "0.22.1",
   "description": "Interactive web-based viewer for DICOM Microscopy Images",
-  "main": "build/dicom-microscopy-viewer.js",
+  "main": "./src/dicom-microscopy-viewer.js",
   "scripts": {
     "test": "npm run build && mochify",
     "webdriver": "mochify --wd",
