@@ -1,5 +1,5 @@
 import { getFeatureScoord3dLength } from "../../../scoord3dUtils.js";
-import { getUnitSuffix } from "../../../utils.js";
+import { getUnitSuffix, formatLength } from "../../../utils.js";
 
 const updateMarkup = (
   shortAxisFeature,
@@ -11,15 +11,15 @@ const updateMarkup = (
   const longAxisGeometry = longAxisFeature.getGeometry();
   const shortAxisLength = getFeatureScoord3dLength(shortAxisFeature, pyramid);
   const longAxisLength = getFeatureScoord3dLength(longAxisFeature, pyramid);
-  const L = `L ${longAxisLength.toFixed(2)} ${unitSuffix}`;
-  const W = ` W ${shortAxisLength.toFixed(2)} ${unitSuffix}`;
+  const L = `L ${formatLength(longAxisLength,unitSuffix)}`;
+  const W = ` W ${formatLength(shortAxisLength, unitSuffix)}`;
   const value = `${L}\n${W}`;
   markupManager.update({
     feature: longAxisFeature,
     value,
     coordinate: longAxisGeometry.getLastCoordinate(),
   });
-  longAxisFeature.setProperties({ shortAxisLength: shortAxisLength.toFixed(2) }, true);
+  longAxisFeature.setProperties({ shortAxisLength }, true);
 };
 
 export default updateMarkup;

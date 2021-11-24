@@ -1,5 +1,5 @@
 import Enums from "../../enums";
-import { getUnitSuffix } from "../../utils";
+import { formatArea, formatLength } from "../../utils";
 import {
   getFeatureScoord3dArea,
   getFeatureScoord3dLength,
@@ -9,18 +9,17 @@ import annotationInterface from "../annotationInterface";
 /**
  * Format measure output.
  *
- * @param {Feature} feature feature
- * @param {string} units units
+ * @param {Feature} feature feature, providing area in mm^2 or length in mm
+ * @param {string} units units - ignored
  * @return {string} The formatted measure of this feature
  */
 export const format = (feature, units, pyramid) => {
   const area = getFeatureScoord3dArea(feature, pyramid);
+  if( area ) return formatArea(area);
   const length = getFeatureScoord3dLength(feature, pyramid);
-  const value = length || area || 0;
-  return length
-    ? `${value.toFixed(2)} ${units}`
-    : `${value.toFixed(2)} ${units}²`;
-};
+  if( length ) return formatLength(length);
+  return '0';
+}
 
 /**
  * Checks if feature has measurement markup properties.
@@ -52,11 +51,10 @@ const MeasurementMarkup = (viewerProperties) => {
         }
 
         const view = map.getView();
-        const unitSuffix = getUnitSuffix(view);
         const ps = feature.get(Enums.InternalProperties.PresentationState);
         markupManager.create({
           feature,
-          value: format(feature, unitSuffix, pyramid),
+          value: format(feature, null, pyramid),
           position: ps && ps.markup ? ps.markup.coordinates : null,
         });
       }

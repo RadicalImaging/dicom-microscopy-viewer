@@ -1,5 +1,5 @@
 import { getFeatureScoord3dArea } from "../../../scoord3dUtils";
-import { getUnitSuffix } from "../../../utils";
+import { formatArea } from "../../../utils";
 import { getEllipseId } from "./id";
 
 const updateMarkup = (
@@ -10,7 +10,6 @@ const updateMarkup = (
   const ellipseFeature = drawingSource.getFeatureById(ellipseFeatureId);
   if (ellipseFeature) {
     const view = map.getView();
-    const unitSuffix = getUnitSuffix(view);
     const ellipseGeometry = ellipseFeature.getGeometry();
     const area = getFeatureScoord3dArea(ellipseFeature, pyramid);
 
@@ -32,7 +31,7 @@ const updateMarkup = (
     const variance = sumSquared / count - mean * mean;
     const stdDev = Math.sqrt(variance);
 
-    const value1 = `Area: ${area.toFixed(2)} ${unitSuffix}`;
+    const value1 = `Area: ${formatArea(area)}`;
     const value2 = `Mean: ${mean.toFixed(2)} Std Dev:${stdDev.toFixed(2)}`;
     const value = `${value1}\n${value2}`;
     markupManager.update({

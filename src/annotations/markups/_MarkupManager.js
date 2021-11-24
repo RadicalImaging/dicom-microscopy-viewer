@@ -254,10 +254,8 @@ class _MarkupManager {
             return;
           }
 
-          const view = this._map.getView()
-          const unitSuffix = getUnitSuffix(view)
           const format = this._getFormatter(feature)
-          const output = format(feature, unitSuffix, this._pyramid)
+          const output = format(feature, null, this._pyramid)
           this.update({
             feature,
             value: output,
