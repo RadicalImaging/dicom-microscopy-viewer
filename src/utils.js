@@ -387,6 +387,39 @@ function areNumbersAlmostEqual (a, b, eps = 1.e-6) {
   return Math.abs(a - b) < eps
 }
 
+
+const formatArea = area => {
+  let mult = 1;
+  let unit = 'mm';
+  if( area > 1000000 ) {
+    unit = 'm';
+    mult = 1/1000000;
+  } else if( area < 1 ) {
+    unit = 'μm';
+    mult = 1000000;
+  }
+  return `${(area*mult).toFixed(2)} ${unit}²`;
+}
+
+const formatLength = (length,unit) => {
+  let mult = 1;
+  if( unit=='km' || !unit && length > 1000000  ) {
+    unit = 'km';
+    mult = 1/1000000;
+  } else if( unit=='m' || !unit && length > 1000 ) {
+    unit = 'm';
+    mult = 1/1000;
+  } else if(  unit=='μm' || !unit && length < 1 ) {
+    unit = 'μm';
+    mult = 1000;
+  } else if( unit && unit!='mm' ) {
+    throw new Error(`Unknown length unit ${unit}`)
+  } else {
+    unit = 'mm';
+  }
+  return `${(length*mult).toFixed(2)} ${unit}`;
+}
+
 /**
  * Get view unit suffix.
  *
@@ -503,5 +536,7 @@ export {
   are2DArraysAlmostEqual,
   doContentItemsMatch,
   areCodedConceptsEqual,
-  getContentItemNameCodedConcept
+  getContentItemNameCodedConcept,
+  formatArea, 
+  formatLength,
 }
