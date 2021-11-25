@@ -182,6 +182,8 @@ class _MarkupManager {
     position,
     isLinkable = true,
     isDraggable = true,
+    isUnclickable = true,
+    noOffset = false
   }) {
     const noMarkup = feature.get(
       Enums.InternalProperties.NoMarkup
@@ -196,29 +198,27 @@ class _MarkupManager {
       return
     }
 
-    if (this.has(id)) {
+    if (this.has(id)) { 
       console.warn('Markup for feature already exists', id)
       return this.get(id)
     }
 
-    const markup = { id, isLinkable, isDraggable, style }
+    const markup = { id, isLinkable, isDraggable, isUnclickable, noOffset, style }
 
     const element = document.createElement('div')
     element.id = markup.isDraggable ? Enums.InternalProperties.Markup : ''
     element.className = 'ol-tooltip ol-tooltip-measure'
     element.innerText = value
 
-    const spacedCoordinate = coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET, this._map)
-
-    element.onpointerdown = event => {
-      event.stopPropagation();
-    }
+    const spacedCoordinate = noOffset === true ? 
+      feature.getGeometry().getLastCoordinate() 
+      : coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET, this._map)
 
     markup.element = element
     markup.overlay = new Overlay({
       className: 'markup-container',
       positioning: 'center-center',
-      stopEvent: true,
+      stopEvent: isUnclickable,
       dragging: false,
       position: position || spacedCoordinate,
       element: markup.element,
@@ -444,7 +444,7 @@ class _MarkupManager {
 
     if (coordinate) {
       const padding = (markup.element.offsetWidth + markup.element.offsetHeight) / 2;
-      markup.overlay.setPosition(coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET + padding, this._map))
+      markup.overlay.setPosition(markup.noOffset === true ? coordinate : coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET + padding, this._map))
     }
 
     this._markups.set(id, markup)

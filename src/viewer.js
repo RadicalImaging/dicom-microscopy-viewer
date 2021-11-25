@@ -1504,7 +1504,6 @@ class VolumeImageViewer {
       /** Dont normalize when is annotation hook */
       this[_annotationManager].onAdd(e.feature)
 
-      console.debug('ROI ADDED', feature);
       publish(
         container,
         EVENT.ROI_ADDED,

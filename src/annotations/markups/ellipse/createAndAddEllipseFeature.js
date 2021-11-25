@@ -42,7 +42,9 @@ const createAndAddEllipseFeature = (
 
   addFeature(ellipseFeature, viewerProperties);
 
-  updateMarkup(originalROIFeature, viewerProperties);
+  if (originalROIFeature) {
+    updateMarkup(originalROIFeature, viewerProperties);
+  }
 };
 
 export default createAndAddEllipseFeature;
