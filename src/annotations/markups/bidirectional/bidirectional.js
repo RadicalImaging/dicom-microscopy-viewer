@@ -36,7 +36,7 @@ const isDrawingBidirectional = (drawingOptions) =>
   drawingOptions[Enums.InternalProperties.Bidirectional] === true;
 
 const attachChangeEvents = (longAxisFeature, viewerProperties) => {
-  const { drawingSource, map, drawingOptions } = viewerProperties;
+  const { drawingSource, map } = viewerProperties;
 
   longAxisFeature.setProperties({ isLongAxis: true }, true);
 
@@ -53,13 +53,7 @@ const attachChangeEvents = (longAxisFeature, viewerProperties) => {
       return;
     }
 
-    createAndAddShortAxisFeature(
-      longAxisFeature,
-      viewerProperties,
-      drawingOptions
-        ? getAxisStyle(drawingOptions[Enums.InternalProperties.StyleOptions])
-        : getAxisStyle()
-    );
+    createAndAddShortAxisFeature(longAxisFeature, viewerProperties);
   };
 
   const longAxisGeometry = longAxisFeature.getGeometry();
@@ -149,7 +143,9 @@ const onPointerDragHandler = (event) => {
 
   /** If clicking outside handles, just stop event and translate */
   if (isClickingAHandle === false) {
-    const { subFeatures } = draggedFeature.getProperties();
+    const subFeatures = draggedFeature.get(
+      Enums.InternalProperties.SubFeatures
+    );
     if (subFeatures && subFeatures.length > 0) {
       subFeatures.forEach((subFeature) => {
         const geometry = subFeature.getGeometry();
@@ -222,7 +218,7 @@ const bidirectional = Object.assign({}, annotationInterface, {
     /** TODO: Remove long axis check. */
     if (measurements && JSON.stringify(measurements).includes("Long Axis")) {
       attachChangeEvents(feature, viewerProperties);
-      createAndAddShortAxisFeature(feature, viewerProperties, getAxisStyle());
+      createAndAddShortAxisFeature(feature, viewerProperties);
       attachPointerEvents(viewerProperties);
     }
   },
@@ -384,14 +380,14 @@ const bidirectional = Object.assign({}, annotationInterface, {
       feature.setStyle(axisStyle);
       feature.set(Enums.InternalProperties.StyleOptions, styles);
 
-      const longAxisFeatureId = getLongAxisId(draggedFeature);
+      const longAxisFeatureId = getLongAxisId(feature);
       const longAxisFeature = drawingSource.getFeatureById(longAxisFeatureId);
       if (longAxisFeature) {
         longAxisFeature.setStyle(axisStyle);
         longAxisFeature.set(Enums.InternalProperties.StyleOptions, styles);
       }
     }
-  }
-})
+  },
+});
 
 export default bidirectional;

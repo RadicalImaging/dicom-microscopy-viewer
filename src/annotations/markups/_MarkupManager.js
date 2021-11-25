@@ -10,7 +10,6 @@ import Feature from 'ol/Feature'
 
 import Enums from '../../enums'
 import { getShortestLineBetweenOverlayAndFeature } from './utils'
-import { getUnitSuffix } from '../../utils'
 import { coordinateWithOffset } from '../../scoord3dUtils'
 import defaultStyles from '../styles'
 
@@ -184,6 +183,13 @@ class _MarkupManager {
     isLinkable = true,
     isDraggable = true,
   }) {
+    const noMarkup = feature.get(
+      Enums.InternalProperties.NoMarkup
+    );
+    if (noMarkup === true) {
+      return;
+    }
+            
     const id = feature.getId();
     if (!id) {
       console.warn('Failed to create markup, feature id not found')

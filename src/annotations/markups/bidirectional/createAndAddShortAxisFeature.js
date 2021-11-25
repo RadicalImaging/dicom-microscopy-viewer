@@ -6,11 +6,7 @@ import updateMarkup from "./updateMarkup";
 import { getShortAxisId } from "./id";
 import getShortAxisCoords from "./getShortAxisCoords";
 
-const createAndAddShortAxisFeature = (
-  longAxisFeature,
-  viewerProperties,
-  shortAxisStyle
-) => {
+const createAndAddShortAxisFeature = (longAxisFeature, viewerProperties) => {
   const { drawingSource } = viewerProperties;
   const id = getShortAxisId(longAxisFeature);
 
@@ -23,13 +19,17 @@ const createAndAddShortAxisFeature = (
     {
       isShortAxis: true,
       [Enums.InternalProperties.IsSilentFeature]: true,
-      subFeatures: [longAxisFeature]
+      [Enums.InternalProperties.SubFeatures]: [longAxisFeature],
     },
     true
   );
-  longAxisFeature.setProperties({ subFeatures: [feature] }, true);
-  feature.setStyle(shortAxisStyle);
+  longAxisFeature.setProperties(
+    { [Enums.InternalProperties.SubFeatures]: [feature] },
+    true
+  );
+  feature.setStyle(longAxisFeature.getStyle());
 
+  updateMarkup(feature, longAxisFeature, viewerProperties)
   feature.on(Enums.FeatureGeometryEvents.CHANGE, () =>
     updateMarkup(feature, longAxisFeature, viewerProperties)
   );

@@ -11,7 +11,9 @@ export const InternalProperties = {
   ReadOnly: "isReadOnly",
   IsSilentFeature: "isSilent",
   CantBeTranslated: "cantBeTranslated",
-  VertexEnabled: "vertexEnabled"
+  VertexEnabled: "vertexEnabled",
+  NoMarkup: "noMarkup",
+  SubFeatures: "subFeatures"
 };
 
 export const Bidirectional = {
