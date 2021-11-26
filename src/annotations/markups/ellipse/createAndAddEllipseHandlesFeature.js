@@ -20,6 +20,8 @@ const createAndAddEllipseHandlesFeature = (
     {
       isEllipseHandles: true,
       [Enums.InternalProperties.CantBeTranslated]: true,
+      [Enums.InternalProperties.SubFeatures]: [ellipseROIFeature],
+      [Enums.InternalProperties.NoMarkup]: true 
     },
     true
   );

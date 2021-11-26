@@ -25,20 +25,26 @@ const createAndAddEllipseFeature = (
       isEllipseShape: true,
       [Enums.InternalProperties.IsSilentFeature]: true,
       [Enums.InternalProperties.ReadOnly]: true,
-      subFeatures: [ellipseHandlesFeature],
+      [Enums.InternalProperties.SubFeatures]: [ellipseHandlesFeature],
+    },
+    true
+  );
+  ellipseHandlesFeature.setProperties(
+    {
+      [Enums.InternalProperties.SubFeatures]: [ellipseFeature],
+      [Enums.InternalProperties.NoMarkup]: true 
     },
     true
   );
   ellipseFeature.setStyle(getEllipseStyle(ellipseFeature));
 
-  /** Remove markup from handles to add a new one to ellipse */
-  markupManager.remove(ellipseHandlesFeature.getId());
   markupManager.create({ feature: ellipseFeature, style: styles });
 
   addFeature(ellipseFeature, viewerProperties);
 
-  /** Add feature then update the markup */
-  updateMarkup(ellipseHandlesFeature, viewerProperties);
+  if (originalROIFeature) {
+    updateMarkup(originalROIFeature, viewerProperties);
+  }
 };
 
 export default createAndAddEllipseFeature;

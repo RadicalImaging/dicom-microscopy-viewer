@@ -124,7 +124,10 @@ const onPointerDragHandler = (event) => {
 };
 
 const attachChangeEvents = (ellipseHandlesFeature, viewerProperties) => {
-  ellipseHandlesFeature.setProperties({ isEllipseHandles: true }, true);
+  ellipseHandlesFeature.setProperties({ 
+    isEllipseHandles: true, 
+    [Enums.InternalProperties.NoMarkup]: true 
+  }, true);
 
   const ellipseHandlesGeometry = ellipseHandlesFeature.getGeometry();
 
@@ -230,7 +233,6 @@ const ellipse = Object.assign({}, annotationInterface, {
         ellipseHandlesFeatureId
       );
       if (ellipseHandlesFeature) {
-        markupManager.remove(feature.getId());
         removeFeature(ellipseHandlesFeature, viewerProperties);
       }
     }

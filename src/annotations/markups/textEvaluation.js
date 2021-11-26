@@ -75,6 +75,8 @@ const _onInteractionEventHandler = ({ feature, markupManager }) => {
     value: format(feature),
     isLinkable: featureHasMarker,
     isDraggable: featureHasMarker,
+    isUnclickable: false,
+    noOffset: true,
     position: ps && ps.markup ? ps.markup.coordinates : null,
   });
   _applyStyle(feature);

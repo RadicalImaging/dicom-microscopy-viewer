@@ -1480,7 +1480,12 @@ class VolumeImageViewer {
       let feature = e.feature;
 
       /**
-       * Example: Silent until all features from a single annotation are done.
+       * A annotation might be composed of one or more features so
+       * after one feature is added in the drawing source does not mean that the 
+       * annotation is fully drawn. 
+       * 
+       * A silent feature is a feature that doesn't exist by itself and should not
+       * be considered inside any event handler.
        */
       const isSilentFeature = e.feature.get(Enums.InternalProperties.IsSilentFeature)
       if (isSilentFeature == true) {
@@ -1499,7 +1504,6 @@ class VolumeImageViewer {
       /** Dont normalize when is annotation hook */
       this[_annotationManager].onAdd(e.feature)
 
-      console.debug('ROI ADDED', feature);
       publish(
         container,
         EVENT.ROI_ADDED,
@@ -1623,7 +1627,8 @@ class VolumeImageViewer {
         isEllipse: true,
         maxPoints: 1,
         minPoints: 1,
-        [Enums.InternalProperties.VertexEnabled]: false
+        [Enums.InternalProperties.VertexEnabled]: false,
+        [Enums.InternalProperties.NoMarkup]: true
       },
       box: {
         type: 'Circle',
@@ -1672,7 +1677,8 @@ class VolumeImageViewer {
       [Enums.InternalProperties.Markup]:
         options[Enums.InternalProperties.Markup],
       [Enums.InternalProperties.VertexEnabled]: options[Enums.InternalProperties.VertexEnabled],
-      [Enums.InternalProperties.Label]: options[Enums.InternalProperties.Label]
+      [Enums.InternalProperties.Label]: options[Enums.InternalProperties.Label],
+      [Enums.InternalProperties.NoMarkup]: geometryDrawOptions[Enums.InternalProperties.NoMarkup],
     }
     const drawOptions = Object.assign(
       internalDrawOptions,
@@ -1842,7 +1848,7 @@ class VolumeImageViewer {
     this[_interactions].translate.on(Enums.InteractionEvents.TRANSLATING, event => {
       const newCoordinate = event.coordinate;
       event.features.forEach(feature => {
-        const { subFeatures } = feature.getProperties();
+        const subFeatures = feature.get(Enums.InternalProperties.SubFeatures);
         if (subFeatures && subFeatures.length > 0) {
           subFeatures.forEach(subFeature => {
             const geometry = subFeature.getGeometry();
@@ -2345,6 +2351,10 @@ class VolumeImageViewer {
       const id = feature.getId()
       if (id === uid) {
         this.setFeatureStyle(feature, styleOptions)
+        const subFeatures = feature.get(Enums.InternalProperties.SubFeatures);
+        if (subFeatures && subFeatures.length > 0) {
+          subFeatures.forEach(feature => this.setFeatureStyle(feature, styleOptions));
+        }
         const isVisible = Object.keys(styleOptions).length !== 0
         this[_annotationManager].setMarkupVisibility(id, isVisible)
       }

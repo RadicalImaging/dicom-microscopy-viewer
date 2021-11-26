@@ -15,11 +15,11 @@ import annotationInterface from "../annotationInterface";
  */
 export const format = (feature, units, pyramid) => {
   const area = getFeatureScoord3dArea(feature, pyramid);
-  if( area ) return formatArea(area);
+  if (area) return formatArea(area);
   const length = getFeatureScoord3dLength(feature, pyramid);
-  if( length ) return formatLength(length);
-  return '0';
-}
+  if (length) return formatLength(length);
+  return "0";
+};
 
 /**
  * Checks if feature has measurement markup properties.
@@ -45,12 +45,6 @@ const MeasurementMarkup = (viewerProperties) => {
   return Object.assign({}, annotationInterface, {
     onAdd: (feature) => {
       if (_isMeasurement(feature)) {
-        const isSilentFeature = feature.get(Enums.InternalProperties.IsSilentFeature)
-        if (isSilentFeature == true) {
-          return;
-        }
-
-        const view = map.getView();
         const ps = feature.get(Enums.InternalProperties.PresentationState);
         markupManager.create({
           feature,

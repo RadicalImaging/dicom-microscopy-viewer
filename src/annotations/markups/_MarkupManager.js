@@ -10,7 +10,6 @@ import Feature from 'ol/Feature'
 
 import Enums from '../../enums'
 import { getShortestLineBetweenOverlayAndFeature } from './utils'
-import { getUnitSuffix } from '../../utils'
 import { coordinateWithOffset } from '../../scoord3dUtils'
 import defaultStyles from '../styles'
 
@@ -183,36 +182,43 @@ class _MarkupManager {
     position,
     isLinkable = true,
     isDraggable = true,
+    isUnclickable = true,
+    noOffset = false
   }) {
+    const noMarkup = feature.get(
+      Enums.InternalProperties.NoMarkup
+    );
+    if (noMarkup === true) {
+      return;
+    }
+            
     const id = feature.getId();
     if (!id) {
       console.warn('Failed to create markup, feature id not found')
       return
     }
 
-    if (this.has(id)) {
+    if (this.has(id)) { 
       console.warn('Markup for feature already exists', id)
       return this.get(id)
     }
 
-    const markup = { id, isLinkable, isDraggable, style }
+    const markup = { id, isLinkable, isDraggable, isUnclickable, noOffset, style }
 
     const element = document.createElement('div')
     element.id = markup.isDraggable ? Enums.InternalProperties.Markup : ''
     element.className = 'ol-tooltip ol-tooltip-measure'
     element.innerText = value
 
-    const spacedCoordinate = coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET, this._map)
-
-    element.onpointerdown = event => {
-      event.stopPropagation();
-    }
+    const spacedCoordinate = noOffset === true ? 
+      feature.getGeometry().getLastCoordinate() 
+      : coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET, this._map)
 
     markup.element = element
     markup.overlay = new Overlay({
       className: 'markup-container',
       positioning: 'center-center',
-      stopEvent: true,
+      stopEvent: isUnclickable,
       dragging: false,
       position: position || spacedCoordinate,
       element: markup.element,
@@ -438,7 +444,7 @@ class _MarkupManager {
 
     if (coordinate) {
       const padding = (markup.element.offsetWidth + markup.element.offsetHeight) / 2;
-      markup.overlay.setPosition(coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET + padding, this._map))
+      markup.overlay.setPosition(markup.noOffset === true ? coordinate : coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET + padding, this._map))
     }
 
     this._markups.set(id, markup)
