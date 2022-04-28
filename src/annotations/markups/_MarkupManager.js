@@ -444,8 +444,13 @@ class _MarkupManager {
 
     if (coordinate) {
       const padding = (markup.element.offsetWidth + markup.element.offsetHeight) / 2;
-      markup.overlay.setPosition(markup.noOffset === true ? coordinate : coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET + padding, this._map))
-    }
+      const offsetCoordinate = markup.noOffset === true ? coordinate : coordinateWithOffset(feature, DEFAULT_MARKUP_OFFSET + padding, this._map);
+      markup.overlay.setPosition(offsetCoordinate)
+      this.updatePresentationState({
+        feature,
+        coordinates: offsetCoordinate,
+      });
+    } 
 
     this._markups.set(id, markup)
     this._drawLink(feature)
