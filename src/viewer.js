@@ -2042,10 +2042,6 @@ class VolumeImageViewer {
 
     const dragPanOptions = {
       features: this[_features],
-      condition: event => {
-        const feature = this[_drawingSource].getClosestFeatureToCoordinate(event.coordinate);
-        return feature && feature.get(Enums.InternalProperties.ReadOnly) !== true
-      },
     }
 
     /**
